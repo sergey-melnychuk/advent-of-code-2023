@@ -34,7 +34,8 @@ fn part2(nums: &[Number], grid: &Grid<char>) -> usize {
 
     let gears = grid.find(|c| c == &'*');
     for gear in gears {
-        let numbers = nums.iter()
+        let numbers = nums
+            .iter()
             .filter(|n| n.adj(grid).contains(&gear))
             .collect::<Vec<_>>();
 
