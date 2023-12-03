@@ -9,17 +9,13 @@ fn main() {
     let nums = extract_numbers(&lines);
     let grid = Grid::new(lines, grid::id);
 
-    println!("{}", part1(&nums, &grid)); // max: 598856
-    // 488162 - too low
-    // 492284 - too low
-    // 502813 - too low
+    println!("{}", part1(&nums, &grid)); // 533784
 }
 
 fn part1(nums: &[Number], grid: &Grid<char>) -> usize {
     fn is_symbol(c: &char) -> bool {
-        c != &'.' && !c.is_numeric()
+        c != &'.' && !c.is_ascii_digit()
     }
-
     nums.iter()
         .filter(|number| {
             number
@@ -43,7 +39,7 @@ struct Number {
 impl Number {
     fn hits(&self, pos: &(usize, usize)) -> bool {
         let (row, col) = *pos;
-        (row == self.row) && (self.lo >= col) && (col < self.hi)
+        (row == self.row) && (self.lo <= col) && (col < self.hi)
     }
 
     fn adj<T: std::fmt::Debug + 'static>(&self, grid: &Grid<T>) -> Vec<(usize, usize)> {
