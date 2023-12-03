@@ -2,8 +2,6 @@ use std::collections::{HashSet, VecDeque};
 
 use advent_of_code_2023::*;
 
-// cargo run --bin day03 < txt/day03.txt
-
 fn main() {
     let lines = lines();
     let nums = extract_numbers(&lines);
