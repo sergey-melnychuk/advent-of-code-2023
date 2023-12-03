@@ -6,6 +6,10 @@ fn main() {
 }
 */
 
+pub mod grid;
+
+pub use grid::Grid;
+
 pub fn lines() -> Vec<String> {
     use std::io::BufRead;
 
