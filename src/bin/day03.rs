@@ -10,6 +10,7 @@ fn main() {
     let grid = Grid::new(lines, grid::id);
 
     println!("{}", part1(&nums, &grid)); // 533784
+    println!("{}", part2(&nums, &grid)); // 78826761
 }
 
 fn part1(nums: &[Number], grid: &Grid<char>) -> usize {
@@ -26,6 +27,24 @@ fn part1(nums: &[Number], grid: &Grid<char>) -> usize {
         })
         .map(|number| number.val)
         .sum::<usize>()
+}
+
+fn part2(nums: &[Number], grid: &Grid<char>) -> usize {
+    let mut ret = 0;
+
+    let gears = grid.find(|c| c == &'*');
+    for gear in gears {
+        let numbers = nums.iter()
+            .filter(|n| n.adj(grid).contains(&gear))
+            .collect::<Vec<_>>();
+
+        if numbers.len() == 2 {
+            let ratio = numbers[0].val * numbers[1].val;
+            ret += ratio;
+        }
+    }
+
+    ret
 }
 
 #[derive(Debug)]
