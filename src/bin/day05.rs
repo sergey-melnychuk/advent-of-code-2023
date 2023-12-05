@@ -7,7 +7,9 @@ fn main() {
     let (seeds, mappings) = parse(&lines());
 
     println!("{}", part1(&seeds, &mappings)); // 579439039
-    println!("{}", part2(&seeds, &mappings));
+    println!("{}", part2(&seeds, &mappings)); // .
+                                              // 60287808 - too high
+                                              // 
 }
 
 fn part2(seeds: &[usize], mappings: &[Mapping]) -> usize {
@@ -39,10 +41,28 @@ fn part2(seeds: &[usize], mappings: &[Mapping]) -> usize {
 fn map_range(lo: usize, hi: usize, mappings: &[Mapping]) -> Vec<(usize, usize)> {
     let mut ret = vec![(lo, hi)];
     for m in mappings {
-        println!("ret: {}", ret.len());
+        ret = merge(ret);
         ret = ret.into_iter()
             .flat_map(|(lo, hi)| m.map_range(lo, hi))
             .collect();
+    }
+    ret
+}
+
+fn merge(mut ranges: Vec<(usize, usize)>) -> Vec<(usize, usize)> {
+    ranges.sort_by_key(|r| r.0);
+    let mut ret = Vec::new();
+    for (a, b) in ranges {
+        let last = ret.last().cloned();
+        if let Some((lo, hi)) = last {
+            if a <= hi {
+                *ret.last_mut().unwrap() = (lo, b.max(hi));
+            } else {
+                ret.push((a, b));
+            }
+        } else {
+            ret.push((a, b));
+        }
     }
     ret
 }
@@ -68,8 +88,7 @@ struct Rule {
 
 impl Rule {
     fn map(&self, x: usize) -> Option<usize> {
-        let end = self.src + self.len;
-        if (self.src..end).contains(&x) {
+        if self.hits(x) {
             Some(x - self.src + self.dst)
         } else {
             None
@@ -77,16 +96,17 @@ impl Rule {
     }
 
     fn map_range(&self, lo: usize, hi: usize) -> Option<(usize, usize)> {
-        if lo > self.src + self.len || hi < self.src {
+        if lo >= self.src + self.len || hi <= self.src {
             return None;
         }
         let lo = lo.max(self.src) - self.src + self.dst;
-        let hi = hi.max(self.src + self.len) - self.src + self.dst;
+        let hi = hi.min(self.src + self.len) - self.src + self.dst;
         Some((lo, hi))
     }
 
     fn hits(&self, x: usize) -> bool {
-        (x >= self.src) && (x < self.src + self.len)
+        let end = self.src + self.len;
+        (self.src..end).contains(&x)
     }
 }
 
@@ -119,7 +139,7 @@ impl Mapping {
         } else {
             lo
         };
-        let tail = if let Some(head) = rules.iter().find(|r| r.hits(lo)) {
+        let tail = if let Some(head) = rules.iter().find(|r| r.hits(hi)) {
             head.src
         } else {
             hi
