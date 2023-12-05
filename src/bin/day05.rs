@@ -12,10 +12,12 @@ fn part2(seeds: &[usize], mappings: &[Mapping]) -> usize {
     let seeds = fst.cloned().zip(len.cloned()).collect::<Vec<_>>();
 
     let p = seeds.iter().map(|(_, len)| *len).max().unwrap_or_default();
-    let p = 10usize.pow((p as f64 / 100.0).log10().ceil() as u32);
+    let p = 10usize.pow((p as f64 / 1000.0).log10().ceil() as u32);
     let mut step = p;
 
-    let (lo, hi, best, _) = seeds.iter().cloned()
+    let (lo, hi, best, _) = seeds
+        .iter()
+        .cloned()
         .map(|(src, len)| {
             let lo = src;
             let hi = src + len;
@@ -40,7 +42,8 @@ fn part2(seeds: &[usize], mappings: &[Mapping]) -> usize {
         let b = hi.min(pos + step);
         step /= 10;
 
-        (pos, min) = (a..b).step_by(step)
+        (pos, min) = (a..b)
+            .step_by(step)
             .map(|x| (x, map(x, mappings)))
             .min_by_key(|x| x.1)
             .unwrap();
