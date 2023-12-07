@@ -8,47 +8,68 @@ const JOKER_DEFAULT: usize = 11;
 fn main() {
     let hands = parse(&lines());
     println!("{}", part1(&hands)); // 251545216
-    println!("wait for it..."); // TODO: too slow (3+ minutes)
     println!("{}", part2(&hands)); // 250384185
 }
 
-fn hand_rank(hand: &Hand, hands: &[(Hand, usize)]) -> usize {
+fn cache(hands: &[(Hand, usize)]) -> Vec<Rank> {
     hands
         .iter()
-        .filter(|(h, _)| h != hand)
-        .filter(|(h, _)| cmp_with_joker(h, hand) == Ordering::Less)
-        .count()
+        .map(|(hand, _)| hand.rank_with_joker())
+        .collect()
+}
+
+fn hand_rank(idx: usize, hands: &[(Hand, usize)], cache: &[Rank]) -> usize {
+    let mut count = 0;
+    let n = hands.len();
+    for i in 0..n {
+        if i == idx {
+            continue;
+        }
+        if less(i, idx, hands, cache) {
+            count += 1;
+        }
+    }
+    count
 }
 
 fn part2(hands: &[(Hand, usize)]) -> usize {
+    let cache = cache(&hands);
     let mut sum = 0;
-    for (hand, bid) in hands {
-        sum += bid * (hand_rank(hand, hands) + 1);
+    let n = hands.len();
+    for i in 0..n {
+        let (_, bid) = &hands[i];
+        sum += bid * (hand_rank(i, hands, &cache) + 1);
     }
     sum
 }
 
-fn cmp_with_joker(lhs: &Hand, rhs: &Hand) -> Ordering {
-    let lhs_rank = lhs.rank_with_joker();
-    let rhs_rank = rhs.rank_with_joker();
-    if lhs_rank == rhs_rank {
-        let j = if lhs.has_joker() || rhs.has_joker() {
+fn less(
+    lhs: usize,
+    rhs: usize,
+    hands: &[(Hand, usize)],
+    cache: &[Rank],
+) -> bool {
+    let lhs_rank = &cache[lhs];
+    let rhs_rank = &cache[rhs];
+    if lhs_rank != rhs_rank {
+        lhs_rank < rhs_rank
+    } else {
+        let a = &hands[lhs].0;
+        let b = &hands[rhs].0;
+        let j = if a.has_joker() || b.has_joker() {
             JOKER_ENABLED
         } else {
             JOKER_DEFAULT
         };
-        let this = lhs.cards.iter().map(|c| rank(*c, j));
-        let that = rhs.cards.iter().map(|c| rank(*c, j));
-        for (a, b) in this.zip(that) {
+        for (a, b) in a.cards.iter().zip(b.cards.iter()) {
+            let (a, b) = (rank(*a, j), rank(*b, j));
             if a == b {
                 continue;
             } else {
-                return a.cmp(&b);
+                return a < b;
             }
         }
         unreachable!()
-    } else {
-        lhs_rank.cmp(&rhs_rank)
     }
 }
 
@@ -257,8 +278,5 @@ mod day07 {
 
         let c = Hand::from("KTJJT");
         assert_eq!(c.rank_with_joker(), Rank::Four);
-
-        assert_eq!(cmp_with_joker(&a, &b), Ordering::Less);
-        assert_eq!(cmp_with_joker(&b, &c), Ordering::Less);
     }
 }
