@@ -2,6 +2,9 @@ use std::{cmp::Ordering, collections::HashMap, fmt::Display};
 
 use advent_of_code_2023::*;
 
+const JOKER_ENABLED: usize = 1;
+const JOKER_DEFAULT: usize = 11;
+
 fn main() {
     let hands = parse(&lines());
     println!("{}", part1(&hands)); // 251545216
@@ -31,7 +34,7 @@ fn cmp_with_joker(lhs: &Hand, rhs: &Hand) -> Ordering {
     let lhs_rank = lhs.rank_with_joker();
     let rhs_rank = rhs.rank_with_joker();
     if lhs_rank == rhs_rank {
-        let j = if lhs.has_joker() || rhs.has_joker() { 1 } else { 11 };
+        let j = if lhs.has_joker() || rhs.has_joker() { JOKER_ENABLED } else { JOKER_DEFAULT };
         let this = lhs.cards.iter().map(|c| rank(*c, j));
         let that = rhs.cards.iter().map(|c| rank(*c, j));
         for (a, b) in this.zip(that) {
