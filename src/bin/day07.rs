@@ -21,9 +21,7 @@ fn hand_rank(hand: &Hand, hands: &[(Hand, usize)]) -> usize {
 
 fn part2(hands: &[(Hand, usize)]) -> usize {
     let mut sum = 0;
-    let mut idx = 0;
     for (hand, bid) in hands {
-        idx += 1;
         sum += bid * (hand_rank(hand, hands) + 1);
     }
     sum
