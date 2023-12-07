@@ -5,9 +5,8 @@ use advent_of_code_2023::*;
 fn main() {
     let hands = parse(&lines());
     println!("{}", part1(&hands)); // 251545216
-    println!("{}", part2(&hands)); //
-                                   // 250233355 - too low
-                                   // 250393419 - too high
+    println!("{}", part2(&hands)); // 250384185
+    // TODO: part 2 is extremely slow!
 }
 
 fn hand_rank(hand: &Hand, hands: &[(Hand, usize)]) -> usize {
@@ -32,7 +31,7 @@ fn cmp_with_joker(lhs: &Hand, rhs: &Hand) -> Ordering {
     let lhs_rank = lhs.rank_with_joker();
     let rhs_rank = rhs.rank_with_joker();
     if lhs_rank == rhs_rank {
-        if lhs.has_joker() && rhs.has_joker() {
+        if lhs.has_joker() || rhs.has_joker() {
             let this = lhs.cards.iter().map(|c| rank(*c, 1)).collect::<Vec<_>>();
             let that = rhs.cards.iter().map(|c| rank(*c, 1)).collect::<Vec<_>>();
             this.cmp(&that)
