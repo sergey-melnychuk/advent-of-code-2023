@@ -10,11 +10,11 @@ fn part2(races: &[(usize, usize)]) -> usize {
     let (t, d) = fix(races);
     // x * (t - x) - d = 0
     // -x^2 + t * x - d = 0
-    // 
+    //
     // a=-1 b=t c=-d
     // D = b^2 - 4ac
     // D = t*t - 4 * d
-    // 
+    //
     // x1 = -b +- sqrt(D) / 2a
     // x2 = t -+ sqrt(D) / 2
 
@@ -40,7 +40,8 @@ fn fold(xs: &[usize]) -> usize {
 }
 
 fn part1(races: &[(usize, usize)]) -> usize {
-    races.iter()
+    races
+        .iter()
         .map(|(time, dist)| count(*time, *dist))
         .product::<usize>()
 }
@@ -53,19 +54,19 @@ fn count(time: usize, dist: usize) -> usize {
 }
 
 fn parse(lines: &[String]) -> Vec<(usize, usize)> {
-    let parsed = lines.iter()
-        .map(|line| line.split_whitespace()
-            .filter(|s| !s.is_empty())
-            .skip(1)
-            .map(|s| s.parse::<usize>().unwrap())
-            .collect::<Vec<_>>()
-        )
+    let parsed = lines
+        .iter()
+        .map(|line| {
+            line.split_whitespace()
+                .filter(|s| !s.is_empty())
+                .skip(1)
+                .map(|s| s.parse::<usize>().unwrap())
+                .collect::<Vec<_>>()
+        })
         .collect::<Vec<_>>();
 
     assert_eq!(parsed.len(), 2);
     let ts = &parsed[0];
     let ds = &parsed[1];
-    ts.iter().cloned()
-        .zip(ds.iter().cloned())
-        .collect()
+    ts.iter().cloned().zip(ds.iter().cloned()).collect()
 }
