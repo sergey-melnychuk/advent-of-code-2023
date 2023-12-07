@@ -33,7 +33,8 @@ fn part2(cards: &[Card]) -> usize {
         .iter()
         .map(|card| {
             let winning = card.winning.iter().collect::<HashSet<_>>();
-            let hits = card.numbers.iter().filter(|n| winning.contains(n)).count();
+            let hits =
+                card.numbers.iter().filter(|n| winning.contains(n)).count();
             let winners = (0..hits)
                 .map(|x| card.id + 1 + x)
                 .filter(|id| id <= &max_id)
@@ -74,7 +75,10 @@ fn dfs(map: &HashMap<usize, Vec<usize>>) -> HashMap<usize, usize> {
             for peer in peers {
                 inner(peer, seen, acc, map);
             }
-            let sum = 1 + peers.iter().filter_map(|peer| acc.get(peer)).sum::<usize>();
+            let sum = 1 + peers
+                .iter()
+                .filter_map(|peer| acc.get(peer))
+                .sum::<usize>();
             acc.insert(*node, sum);
         } else {
             acc.insert(*node, 1);

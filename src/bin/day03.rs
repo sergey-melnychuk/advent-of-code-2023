@@ -60,7 +60,10 @@ impl Number {
         (row == self.row) && (self.lo <= col) && (col < self.hi)
     }
 
-    fn adj<T: std::fmt::Debug + 'static>(&self, grid: &Grid<T>) -> Vec<(usize, usize)> {
+    fn adj<T: std::fmt::Debug + 'static>(
+        &self,
+        grid: &Grid<T>,
+    ) -> Vec<(usize, usize)> {
         let adj = (self.lo..self.hi)
             .map(|col| (self.row, col))
             .flat_map(|pos| grid.adj(pos))

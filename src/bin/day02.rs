@@ -39,7 +39,9 @@ fn is_possible(game: &Game, available: &Seen) -> bool {
         .cloned()
         .reduce(|a, b| max_seen(&a, &b))
         .unwrap_or_default();
-    available.red >= max.red && available.green >= max.green && available.blue >= max.blue
+    available.red >= max.red
+        && available.green >= max.green
+        && available.blue >= max.blue
 }
 
 fn max_seen(a: &Seen, b: &Seen) -> Seen {

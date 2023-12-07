@@ -13,7 +13,8 @@ fn main() {
 }
 
 fn hand_rank(hand: &Hand, hands: &[(Hand, usize)]) -> usize {
-    hands.iter()
+    hands
+        .iter()
         .filter(|(h, _)| h != hand)
         .filter(|(h, _)| cmp_with_joker(h, hand) == Ordering::Less)
         .count()
@@ -31,7 +32,11 @@ fn cmp_with_joker(lhs: &Hand, rhs: &Hand) -> Ordering {
     let lhs_rank = lhs.rank_with_joker();
     let rhs_rank = rhs.rank_with_joker();
     if lhs_rank == rhs_rank {
-        let j = if lhs.has_joker() || rhs.has_joker() { JOKER_ENABLED } else { JOKER_DEFAULT };
+        let j = if lhs.has_joker() || rhs.has_joker() {
+            JOKER_ENABLED
+        } else {
+            JOKER_DEFAULT
+        };
         let this = lhs.cards.iter().map(|c| rank(*c, j));
         let that = rhs.cards.iter().map(|c| rank(*c, j));
         for (a, b) in this.zip(that) {
@@ -42,7 +47,7 @@ fn cmp_with_joker(lhs: &Hand, rhs: &Hand) -> Ordering {
             }
         }
         unreachable!()
-} else {
+    } else {
         lhs_rank.cmp(&rhs_rank)
     }
 }
@@ -134,8 +139,10 @@ impl Ord for Hand {
         let self_rank = self.rank();
         let that_rank = that.rank();
         if self_rank == that_rank {
-            let this = self.cards.iter().map(|c| rank(*c, 11)).collect::<Vec<_>>();
-            let that = that.cards.iter().map(|c| rank(*c, 11)).collect::<Vec<_>>();
+            let this =
+                self.cards.iter().map(|c| rank(*c, 11)).collect::<Vec<_>>();
+            let that =
+                that.cards.iter().map(|c| rank(*c, 11)).collect::<Vec<_>>();
             this.cmp(&that)
         } else {
             self_rank.cmp(&that_rank)
