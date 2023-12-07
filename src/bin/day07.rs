@@ -31,16 +31,18 @@ fn cmp_with_joker(lhs: &Hand, rhs: &Hand) -> Ordering {
     let lhs_rank = lhs.rank_with_joker();
     let rhs_rank = rhs.rank_with_joker();
     if lhs_rank == rhs_rank {
-        if lhs.has_joker() || rhs.has_joker() {
-            let this = lhs.cards.iter().map(|c| rank(*c, 1)).collect::<Vec<_>>();
-            let that = rhs.cards.iter().map(|c| rank(*c, 1)).collect::<Vec<_>>();
-            this.cmp(&that)
-        } else {
-            let this = lhs.cards.iter().map(|c| rank(*c, 11)).collect::<Vec<_>>();
-            let that = rhs.cards.iter().map(|c| rank(*c, 11)).collect::<Vec<_>>();
-            this.cmp(&that)
+        let j = if lhs.has_joker() || rhs.has_joker() { 1 } else { 11 };
+        let this = lhs.cards.iter().map(|c| rank(*c, j));
+        let that = rhs.cards.iter().map(|c| rank(*c, j));
+        for (a, b) in this.zip(that) {
+            if a == b {
+                continue;
+            } else {
+                return a.cmp(&b);
+            }
         }
-    } else {
+        unreachable!()
+} else {
         lhs_rank.cmp(&rhs_rank)
     }
 }
