@@ -8,8 +8,8 @@ const JOKER_DEFAULT: usize = 11;
 fn main() {
     let hands = parse(&lines());
     println!("{}", part1(&hands)); // 251545216
+    println!("wait for it..."); // TODO: too slow (3+ minutes)
     println!("{}", part2(&hands)); // 250384185
-    // TODO: part 2 is extremely slow!
 }
 
 fn hand_rank(hand: &Hand, hands: &[(Hand, usize)]) -> usize {
@@ -24,7 +24,6 @@ fn part2(hands: &[(Hand, usize)]) -> usize {
     let mut idx = 0;
     for (hand, bid) in hands {
         idx += 1;
-        println!("{idx}");
         sum += bid * (hand_rank(hand, hands) + 1);
     }
     sum
