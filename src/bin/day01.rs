@@ -66,7 +66,7 @@ static DIGITS: [&str; 9] = [
 ];
 
 #[cfg(test)]
-mod tests {
+mod day01 {
     use super::*;
 
     #[test]

@@ -123,7 +123,7 @@ fn find_numbers(line: &str) -> Vec<(usize, usize, usize)> {
 }
 
 #[cfg(test)]
-mod tests {
+mod day03 {
     use super::*;
 
     #[test]
