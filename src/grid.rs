@@ -5,7 +5,7 @@ pub fn id<T>(x: T) -> T {
     x
 }
 
-/// Generic grid implementation
+/// Generic dense grid implementation
 #[derive(Debug)]
 pub struct Grid<T: Debug + 'static> {
     rows: usize,

@@ -18,7 +18,11 @@ mod day00 {
 }
 */
 
+pub mod graf;
 pub mod grid;
+// TODO mesh; // sparse grid (unbounded)
+// TODO heap (Priority Queue)
+// TODO dset (Disjoint Set: https://en.wikipedia.org/wiki/Disjoint-set_data_structure)
 
 pub use grid::Grid;
 
