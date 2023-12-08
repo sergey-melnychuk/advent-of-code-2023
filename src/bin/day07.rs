@@ -33,7 +33,7 @@ fn hand_rank(idx: usize, hands: &[(Hand, usize)], cache: &[Rank]) -> usize {
 }
 
 fn part2(hands: &[(Hand, usize)]) -> usize {
-    let cache = cache(&hands);
+    let cache = cache(hands);
     let mut sum = 0;
     let n = hands.len();
     for i in 0..n {
