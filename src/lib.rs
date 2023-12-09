@@ -4,6 +4,18 @@ use advent_of_code_2023::*;
 fn main() {
     let _ = lines();
 }
+
+// cargo run --bin day00 < txt/day00.txt
+
+#[cfg(test)]
+mod day00 {
+    use super::*;
+
+    #[test]
+    fn test_() {
+        //
+    }
+}
 */
 
 pub mod grid;
