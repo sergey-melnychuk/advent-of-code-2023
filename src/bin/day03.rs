@@ -66,7 +66,7 @@ impl Number {
     ) -> Vec<(usize, usize)> {
         let adj = (self.lo..self.hi)
             .map(|col| (self.row, col))
-            .flat_map(|pos| grid.adj(pos))
+            .flat_map(|pos| grid.adj(&pos))
             .filter(|pos| !self.hits(pos))
             .collect::<HashSet<_>>();
         adj.into_iter().collect()

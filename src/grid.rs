@@ -56,7 +56,7 @@ impl<T: Debug + 'static> Grid<T> {
     }
 
     /// Get adjacent positions to a given one
-    pub fn adj(&self, pos: (usize, usize)) -> Vec<(usize, usize)> {
+    pub fn adj(&self, pos: &(usize, usize)) -> Vec<(usize, usize)> {
         let prow = pos.0 as isize;
         let pcol = pos.1 as isize;
         let mut ret = Vec::with_capacity(9);

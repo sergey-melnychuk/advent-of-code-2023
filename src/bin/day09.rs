@@ -52,7 +52,7 @@ mod day09 {
     fn test_extrapolate() {
         let seq = &[10, 13, 16, 21, 30, 45];
         assert_eq!(extrapolate(seq), 68);
-        let rev = seq.clone().into_iter().rev().collect::<Vec<_>>();
+        let rev = (*seq).into_iter().rev().collect::<Vec<_>>();
         assert_eq!(extrapolate(&rev), 5);
     }
 }

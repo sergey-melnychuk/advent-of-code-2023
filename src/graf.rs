@@ -9,12 +9,16 @@ pub struct Graph {
 #[derive(Debug, Copy, Clone)]
 struct Edge(usize, usize, f64);
 
+impl Default for Graph {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Graph {
     /// Create a new Graph
     pub fn new() -> Self {
-        Self {
-            adj: Map::new(),
-        }
+        Self { adj: Map::new() }
     }
 
     /// Get graph size (nodes, edges)
@@ -31,7 +35,8 @@ impl Graph {
 
     /// Get list of all graph edges
     pub fn edges(&self) -> Vec<(usize, usize, f64)> {
-        self.adj.values()
+        self.adj
+            .values()
             .flatten()
             .map(|Edge(src, dst, w)| (*src, *dst, *w))
             .collect()
