@@ -3,6 +3,9 @@ use advent_of_code_2023::*;
 
 fn main() {
     let _ = lines();
+
+    // println!("{}", part1()); // .
+    // println!("{}", part2()); // .
 }
 
 // cargo run --bin day00 < txt/day00.txt
