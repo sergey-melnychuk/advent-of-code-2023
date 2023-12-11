@@ -1,7 +1,5 @@
 use advent_of_code_2023::*;
 
-// cargo run --bin day09 < txt/day09.txt
-
 fn main() {
     let input = lines()
         .into_iter()

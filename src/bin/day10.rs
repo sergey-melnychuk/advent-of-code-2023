@@ -3,8 +3,6 @@ use std::collections::{HashMap, HashSet, VecDeque};
 use advent_of_code_2023::*;
 use grid::Grid;
 
-// cargo run --bin day10 < txt/day10.txt
-
 fn main() {
     let grid = Grid::new(lines(), grid::id);
     let start = {
