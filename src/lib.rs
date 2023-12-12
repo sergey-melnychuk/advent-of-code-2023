@@ -9,6 +9,8 @@ fn main() {
 }
 
 // cargo run --bin day00 < txt/day00.txt
+// cargo run --release --bin day00 < txt/day00.txt
+// cargo test --package advent-of-code-2023 --bin day00 -- day00 --nocapture
 
 #[cfg(test)]
 mod day00 {
