@@ -60,7 +60,7 @@ impl Number {
         (row == self.row) && (self.lo <= col) && (col < self.hi)
     }
 
-    fn adj<T: std::fmt::Debug + 'static>(
+    fn adj<T: Clone + std::fmt::Debug + 'static>(
         &self,
         grid: &Grid<T>,
     ) -> Vec<(usize, usize)> {

@@ -10,14 +10,14 @@ pub fn id<T>(x: T) -> T {
 pub type Cell = (usize, usize);
 
 /// Generic dense grid implementation
-#[derive(Debug)]
-pub struct Grid<T: Debug + 'static> {
+#[derive(Clone, Debug)]
+pub struct Grid<T: Clone + Debug + 'static> {
     rows: usize,
     cols: usize,
     data: Vec<Vec<T>>,
 }
 
-impl<T: Debug + 'static> Grid<T> {
+impl<T: Clone + Debug + 'static> Grid<T> {
     /// Create a new grid out of lines
     pub fn new(lines: Vec<String>, f: impl Fn(char) -> T) -> Self {
         let rows = lines.len();
@@ -45,6 +45,11 @@ impl<T: Debug + 'static> Grid<T> {
     /// Get grid size (rows, cols)
     pub fn size(&self) -> (usize, usize) {
         (self.rows, self.cols)
+    }
+
+    /// Get iterator over the rows of the grid
+    pub fn rows(&self) -> impl Iterator<Item = &'_ [T]> {
+        (0..self.rows).map(|row| self.data[row].as_ref())
     }
 
     /// Get grid item at a given position
@@ -106,22 +111,42 @@ impl<T: Debug + 'static> Grid<T> {
     }
 
     /// Get string representation of the grid
-    pub fn dump(&self, f: impl Fn(&T) -> char) -> String {
+    pub fn dump(&self, f: impl Fn(T) -> char) -> String {
         self.data
             .iter()
-            .map(|row| row.iter().map(&f).collect())
+            .map(|row| row.iter().map(|c| f(c.clone())).collect())
             .collect::<Vec<String>>()
             .join("\n")
     }
+
+    pub fn transpose(&self) -> Grid<T> {
+        let mut data = Vec::with_capacity(self.cols);
+        for _ in 0..self.cols {
+            data.push(Vec::with_capacity(self.rows));
+        }
+
+        for (_, col, val) in self.iter() {
+            data[col].push(val.clone());
+        }
+
+        assert_eq!(data.len(), self.cols);
+        assert!(data.iter().all(|row| row.len() == self.rows));
+
+        Grid {
+            rows: self.cols,
+            cols: self.rows,
+            data,
+        }
+    }
 }
 
-struct GridIter<'a, T: Debug + 'static> {
+struct GridIter<'a, T: Clone + Debug + 'static> {
     grid: &'a Grid<T>,
     row: usize,
     col: usize,
 }
 
-impl<'a, T: Debug + 'static> GridIter<'a, T> {
+impl<'a, T: Clone + Debug + 'static> GridIter<'a, T> {
     fn new(grid: &'a Grid<T>) -> Self {
         Self {
             grid,
@@ -131,7 +156,7 @@ impl<'a, T: Debug + 'static> GridIter<'a, T> {
     }
 }
 
-impl<'a, T: Debug + 'static> Iterator for GridIter<'a, T> {
+impl<'a, T: Clone + Debug + 'static> Iterator for GridIter<'a, T> {
     type Item = (usize, usize, &'a T);
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -140,7 +165,7 @@ impl<'a, T: Debug + 'static> Iterator for GridIter<'a, T> {
         let val = self.grid.get(&(row, col))?;
 
         self.col += 1;
-        if self.col == self.grid.cols - 1 {
+        if self.col == self.grid.cols {
             self.col = 0;
             self.row += 1;
         }
@@ -150,7 +175,7 @@ impl<'a, T: Debug + 'static> Iterator for GridIter<'a, T> {
 }
 
 /// BFS traversal of a grid
-pub fn bfs<T: Debug + 'static>(
+pub fn bfs<T: Clone + Debug + 'static>(
     grid: &Grid<T>,
     from: &Cell,
     mut f: impl FnMut(Cell, Cell),
@@ -171,7 +196,7 @@ pub fn bfs<T: Debug + 'static>(
 }
 
 /// Dijkstra's shortest path algorithm
-pub fn dijkstra<T: Debug + 'static>(
+pub fn dijkstra<T: Clone + Debug + 'static>(
     grid: &Grid<T>,
     from: &Cell,
 ) -> (Vec<Vec<usize>>, Map<Cell, Cell>) {
@@ -188,4 +213,18 @@ pub fn dijkstra<T: Debug + 'static>(
         }
     });
     (dist, prev)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_transpose() {
+        let grid = Grid::new(
+            vec!["1234".to_owned(), "4578".to_owned(), "9ABC".to_owned()],
+            id,
+        );
+        assert_eq!(grid.transpose().dump(id), "149\n25A\n37B\n48C");
+    }
 }
