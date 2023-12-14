@@ -64,6 +64,11 @@ impl<T: Clone + Debug + 'static> Grid<T> {
         self.data.get_mut(row).and_then(|row| row.get_mut(col))
     }
 
+    /// Get mutable reference to a grid item at a given position
+    pub fn set(&mut self, pos: &Cell, val: T) {
+        *self.get_mut(pos).unwrap() = val;
+    }
+
     /// Get adjacent positions to a given one
     pub fn adj(&self, pos: &Cell) -> Vec<Cell> {
         let prow = pos.0 as isize;
