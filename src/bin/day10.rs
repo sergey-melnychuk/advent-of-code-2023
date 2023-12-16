@@ -4,7 +4,7 @@ use advent_of_code_2023::*;
 use grid::Grid;
 
 fn main() {
-    let grid = Grid::new(lines(), grid::id);
+    let grid = Grid::raw(lines());
     let start = {
         let found = grid.find(|c| *c == 'S');
         assert_eq!(found.len(), 1, "grid must contain one starting point S");

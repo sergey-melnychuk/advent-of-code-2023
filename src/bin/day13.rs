@@ -91,7 +91,7 @@ fn mismatch(a: &str, b: &str) -> Vec<usize> {
 fn parse(lines: Vec<String>) -> Vec<Grid<char>> {
     lines
         .split(|line| line.is_empty())
-        .map(|lines| Grid::new(lines.to_vec(), grid::id))
+        .map(|lines| Grid::raw(lines.to_vec()))
         .collect()
 }
 
@@ -118,7 +118,7 @@ mod day13 {
             .collect::<Vec<_>>();
         assert_eq!(lines.len(), 7);
 
-        let grid = Grid::new(lines, grid::id);
+        let grid = Grid::raw(lines);
         let (rows, cols) = grid.size();
         let grid = grid.transpose();
         assert_eq!(grid.size(), (cols, rows));
@@ -196,7 +196,7 @@ mod day13 {
 
         assert!(is_mirror(12, &rows));
 
-        let grid = Grid::new(rows, grid::id);
+        let grid = Grid::raw(rows);
         assert_eq!(reflection(&grid), Some(12));
     }
 }

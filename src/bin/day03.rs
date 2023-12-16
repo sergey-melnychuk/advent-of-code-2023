@@ -5,7 +5,7 @@ use advent_of_code_2023::*;
 fn main() {
     let lines = lines();
     let nums = extract_numbers(&lines);
-    let grid = Grid::new(lines, grid::id);
+    let grid = Grid::raw(lines);
 
     println!("{}", part1(&nums, &grid)); // 533784
     println!("{}", part2(&nums, &grid)); // 78826761

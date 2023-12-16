@@ -7,11 +7,11 @@ fn main() {
     let lines = lines();
 
     let (expanded, empty_cols, empty_rows) = expand(lines.clone());
-    let grid = Grid::new(expanded, grid::id);
+    let grid = Grid::raw(expanded);
     let stars = grid.find(|c| c == &'#');
     println!("{}", part1(&stars)); // 10885634
 
-    let grid2 = Grid::new(lines, grid::id);
+    let grid2 = Grid::raw(lines);
     let stars2 = grid2.find(|c| c == &'#');
     println!("{}", part2(&stars2, &empty_cols, &empty_rows, 1000000)); // 707505470642
 }

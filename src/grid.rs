@@ -1,11 +1,6 @@
 use std::collections::{HashMap as Map, HashSet as Set, VecDeque as Seq};
 use std::fmt::Debug;
 
-/// Identity function.
-pub fn id<T>(x: T) -> T {
-    x
-}
-
 /// Type alias for a cell positio (row, column)
 pub type Cell = (usize, usize);
 
@@ -23,6 +18,13 @@ pub enum Dir {
     East,
     South,
     West,
+}
+
+impl Grid<char> {
+    /// Create a new raw grid (with origin characters as cell values)
+    pub fn raw(lines: Vec<String>) -> Grid<char> {
+        Grid::<char>::new(lines, id)
+    }
 }
 
 impl<T: Clone + Debug + 'static> Grid<T> {
@@ -241,16 +243,22 @@ pub fn dijkstra<T: Clone + Debug + 'static>(
     (dist, prev)
 }
 
+// Generic identity function.
+fn id<T>(x: T) -> T {
+    x
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn test_transpose() {
-        let grid = Grid::new(
-            vec!["1234".to_owned(), "4578".to_owned(), "9ABC".to_owned()],
-            id,
-        );
+        let grid = Grid::raw(vec![
+            "1234".to_owned(),
+            "4578".to_owned(),
+            "9ABC".to_owned(),
+        ]);
         assert_eq!(grid.transpose().dump(id), "149\n25A\n37B\n48C");
     }
 }

@@ -1,10 +1,10 @@
 use std::collections::HashSet;
 
 use advent_of_code_2023::*;
-use grid::{self, Cell, Dir};
+use grid::{self, Cell, Dir, Grid};
 
 fn main() {
-    let grid = Grid::new(lines(), grid::id);
+    let grid = Grid::raw(lines());
     println!("{}", part1(&grid)); // 7728
     println!("{}", part2(&grid)); // 8061
 }
