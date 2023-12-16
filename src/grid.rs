@@ -17,6 +17,14 @@ pub struct Grid<T: Clone + Debug + 'static> {
     data: Vec<Vec<T>>,
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
+pub enum Dir {
+    North,
+    East,
+    South,
+    West,
+}
+
 impl<T: Clone + Debug + 'static> Grid<T> {
     /// Create a new grid out of lines
     pub fn new(lines: Vec<String>, f: impl Fn(char) -> T) -> Self {
@@ -67,6 +75,19 @@ impl<T: Clone + Debug + 'static> Grid<T> {
     /// Get mutable reference to a grid item at a given position
     pub fn set(&mut self, pos: &Cell, val: T) {
         *self.get_mut(pos).unwrap() = val;
+    }
+
+    /// Get next cell given current position and direction
+    pub fn next(&self, pos: &Cell, dir: &Dir) -> Option<Cell> {
+        let (rows, cols) = self.size();
+        let (row, col) = *pos;
+        match dir {
+            Dir::North if row > 0 => Some((row - 1, col)),
+            Dir::East if col < cols - 1 => Some((row, col + 1)),
+            Dir::South if row < rows - 1 => Some((row + 1, col)),
+            Dir::West if col > 0 => Some((row, col - 1)),
+            _ => None,
+        }
     }
 
     /// Get adjacent positions to a given one
