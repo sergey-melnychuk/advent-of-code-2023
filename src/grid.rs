@@ -20,6 +20,34 @@ pub enum Dir {
     West,
 }
 
+impl Dir {
+    pub fn all() -> [Dir; 4] {
+        [Dir::North, Dir::East, Dir::South, Dir::West]
+    }
+
+    pub fn inv(&self) -> Self {
+        match self {
+            Dir::North => Dir::South,
+            Dir::South => Dir::North,
+            Dir::East => Dir::West,
+            Dir::West => Dir::East,
+        }
+    }
+
+    pub fn cw(&self) -> Self {
+        match self {
+            Dir::North => Dir::East,
+            Dir::South => Dir::West,
+            Dir::East => Dir::South,
+            Dir::West => Dir::North,
+        }
+    }
+
+    pub fn ccw(&self) -> Self {
+        self.cw().inv()
+    }
+}
+
 impl Grid<char> {
     /// Create a new raw grid (with origin characters as cell values)
     pub fn raw(lines: Vec<String>) -> Grid<char> {
@@ -139,10 +167,16 @@ impl<T: Clone + Debug + 'static> Grid<T> {
     }
 
     /// Get string representation of the grid
-    pub fn dump(&self, f: impl Fn(T) -> char) -> String {
+    pub fn dump(&self, f: impl Fn(&Cell, T) -> char) -> String {
         self.data
             .iter()
-            .map(|row| row.iter().map(|c| f(c.clone())).collect())
+            .enumerate()
+            .map(|(i, row)| {
+                row.iter()
+                    .enumerate()
+                    .map(|(j, c)| f(&(i, j), c.clone()))
+                    .collect()
+            })
             .collect::<Vec<String>>()
             .join("\n")
     }
@@ -202,6 +236,24 @@ impl<'a, T: Clone + Debug + 'static> Iterator for GridIter<'a, T> {
     }
 }
 
+/// DFS traversal of a graph (with edge weight)
+/* TODO FIXME: dfs impl is wrong
+pub fn dfs<T: Clone + Debug + 'static>(grid: &Grid<T>, from: &Cell, mut f: impl FnMut(Cell, Cell)) {
+    let mut seen: Set<Cell> = Set::new();
+    let mut stack: Vec<Cell> = Vec::new();
+    stack.push(*from);
+    while let Some(node) = stack.pop() {
+        seen.insert(node);
+        for next in grid.adj(&node).into_iter().rev() {
+            f(node, next);
+            if !seen.contains(&next) {
+                stack.push(next);
+            }
+        }
+    }
+}
+*/
+
 /// BFS traversal of a grid
 pub fn bfs<T: Clone + Debug + 'static>(
     grid: &Grid<T>,
@@ -259,6 +311,6 @@ mod tests {
             "4578".to_owned(),
             "9ABC".to_owned(),
         ]);
-        assert_eq!(grid.transpose().dump(id), "149\n25A\n37B\n48C");
+        assert_eq!(grid.transpose().dump(|_, x| x), "149\n25A\n37B\n48C");
     }
 }

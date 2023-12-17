@@ -114,6 +114,7 @@ pub fn bfs(g: &Graph, n: usize, mut f: impl FnMut(usize, usize)) {
 }
 
 /// DFS traversal of a graph (with edge weight)
+/* TODO FIXME: dfs impl is wrong
 pub fn dfsw(g: &Graph, n: usize, mut f: impl FnMut(usize, usize, f64)) {
     let mut seen: Set<usize> = Set::new();
     let mut stack: Vec<usize> = Vec::new();
@@ -133,6 +134,7 @@ pub fn dfsw(g: &Graph, n: usize, mut f: impl FnMut(usize, usize, f64)) {
 pub fn dfs(g: &Graph, n: usize, mut f: impl FnMut(usize, usize)) {
     dfsw(g, n, |from, node, _| f(from, node))
 }
+*/
 
 /// Dijkstra's shortest path algorithm
 pub fn dijkstra(g: &Graph, n: usize) -> (Map<usize, f64>, Map<usize, usize>) {
