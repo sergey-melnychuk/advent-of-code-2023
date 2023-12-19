@@ -236,24 +236,6 @@ impl<'a, T: Clone + Debug + 'static> Iterator for GridIter<'a, T> {
     }
 }
 
-/// DFS traversal of a graph (with edge weight)
-/* TODO FIXME: dfs impl is wrong
-pub fn dfs<T: Clone + Debug + 'static>(grid: &Grid<T>, from: &Cell, mut f: impl FnMut(Cell, Cell)) {
-    let mut seen: Set<Cell> = Set::new();
-    let mut stack: Vec<Cell> = Vec::new();
-    stack.push(*from);
-    while let Some(node) = stack.pop() {
-        seen.insert(node);
-        for next in grid.adj(&node).into_iter().rev() {
-            f(node, next);
-            if !seen.contains(&next) {
-                stack.push(next);
-            }
-        }
-    }
-}
-*/
-
 /// BFS traversal of a grid
 pub fn bfs<T: Clone + Debug + 'static>(
     grid: &Grid<T>,
@@ -300,6 +282,8 @@ fn id<T>(x: T) -> T {
     x
 }
 
+// TODO dfs
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -313,4 +297,6 @@ mod tests {
         ]);
         assert_eq!(grid.transpose().dump(|_, x| x), "149\n25A\n37B\n48C");
     }
+
+    // TODO add tests
 }

@@ -113,29 +113,6 @@ pub fn bfs(g: &Graph, n: usize, mut f: impl FnMut(usize, usize)) {
     bfsw(g, n, |from, node, _| f(from, node))
 }
 
-/// DFS traversal of a graph (with edge weight)
-/* TODO FIXME: dfs impl is wrong
-pub fn dfsw(g: &Graph, n: usize, mut f: impl FnMut(usize, usize, f64)) {
-    let mut seen: Set<usize> = Set::new();
-    let mut stack: Vec<usize> = Vec::new();
-    stack.push(n);
-    while let Some(node) = stack.pop() {
-        seen.insert(node);
-        for (next, w) in g.adjw(node).into_iter().rev() {
-            f(node, next, w);
-            if !seen.contains(&next) {
-                stack.push(next);
-            }
-        }
-    }
-}
-
-/// DFS traversal of a graph (without edge weight)
-pub fn dfs(g: &Graph, n: usize, mut f: impl FnMut(usize, usize)) {
-    dfsw(g, n, |from, node, _| f(from, node))
-}
-*/
-
 /// Dijkstra's shortest path algorithm
 pub fn dijkstra(g: &Graph, n: usize) -> (Map<usize, f64>, Map<usize, usize>) {
     if g.edges().iter().any(|(_, _, w)| w < &0.0) {
@@ -159,8 +136,7 @@ pub fn dijkstra(g: &Graph, n: usize) -> (Map<usize, f64>, Map<usize, usize>) {
     (dist, prev)
 }
 
-// TODO mst (dset + heap (as priority queue))
-// TODO tarjan
+// TODO dfs
 
 #[cfg(test)]
 mod graf {
